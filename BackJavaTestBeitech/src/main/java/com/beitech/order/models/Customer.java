@@ -30,6 +30,7 @@ public class Customer implements Serializable{
 	@Column(name = "email")
 	@NotNull
 	private String email;
+		
 	
 	public Customer() {
 		super();
@@ -64,5 +65,5 @@ public class Customer implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-		
+	
 }

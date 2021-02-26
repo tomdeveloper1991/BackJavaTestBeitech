@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.beitech.order.models.Customer;
 import com.beitech.order.models.Order;
 import com.beitech.order.models.Product;
+import com.beitech.order.services.CustomerProductService;
 import com.beitech.order.services.CustomerService;
+import com.beitech.order.services.OrderDetailService;
 import com.beitech.order.services.OrderService;
 import com.beitech.order.services.ProductService;
 
@@ -27,6 +29,12 @@ public class OrderApi {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private CustomerProductService customerProductService;
+	
+	@Autowired
+	private OrderDetailService orderDetailService;
 	
 	@RequestMapping(value="/getOrdersByCustomerAndDate/{customerId}/{fechaInicial}/{fechaFinal}",method = RequestMethod.GET)
 	public List<Order> getAllOrders(@PathVariable(value="customerId") Integer customerId,
@@ -52,6 +60,16 @@ public class OrderApi {
 								+product.getProductDescription()+" - "
 								+product.getPrice());
 		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/getTest",method = RequestMethod.GET)
+	public Object getTest(){
+		Object result = new Object();
+				
+		result=customerProductService.findByIdCustomer(1);
+		result=orderDetailService.findAll();
 		
 		return result;
 	}
