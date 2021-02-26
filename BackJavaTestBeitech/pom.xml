@@ -8,10 +8,10 @@
 		<version>2.4.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.beitech</groupId>
+	<groupId>com.beitech.order</groupId>
 	<artifactId>BackJavaTestBeitech</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>BackJavaTestBeitech</name>
+	<name>BackJavaTestBeitech</name>	
 	<description>Servicio web Rest Test Java Backend</description>
 	<properties>
 		<java.version>1.8</java.version>
