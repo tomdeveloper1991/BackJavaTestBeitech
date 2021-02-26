@@ -28,8 +28,7 @@ public class Order implements Serializable{
 	@NotNull
 	private Integer customerId;
 	
-	@Column(name = "creation_date")
-	@NotNull
+	@Column(name = "creation_date")	
 	private Date creationDate;
 	
 	@Column(name = "delivery_address")

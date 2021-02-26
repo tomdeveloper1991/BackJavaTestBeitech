@@ -16,24 +16,17 @@ import com.beitech.order.services.OrderService;
 public class OrderApi {
 		
 	@Autowired
-	private OrderService service;
-		
-	@RequestMapping(value="/getAllOrders",method = RequestMethod.GET)
-	public List<Order> getAllOrders(){
-		List<Order> lista = new ArrayList<Order>();
-		
-		lista=service.getAllOrders();
-				
-		return lista;
-	}
+	private OrderService service;		
 	
-	@RequestMapping(value="/getOrdersByCustomerAndDate/{customerId}",method = RequestMethod.GET)
-	public List<Order> getAllOrders(@PathVariable(value="customerId") int customerId){
-		List<Order> lista = new ArrayList<Order>();
+	@RequestMapping(value="/getOrdersByCustomerAndDate/{customerId}/{fechaInicial}/{fechaFinal}",method = RequestMethod.GET)
+	public List<Order> getAllOrders(@PathVariable(value="customerId") Integer customerId,
+									@PathVariable(value="fechaInicial") String fechaInicial,
+									@PathVariable(value="fechaFinal") String fechaFinal){
+		List<Order> result = new ArrayList<Order>();
 		System.out.println(customerId);
-		lista=service.getAllOrders();
+		result=service.getAllOrdersByClientAndDate(customerId, fechaInicial, fechaFinal);
 		
-		return lista;
+		return result;
 	}
 
 }

@@ -17,11 +17,11 @@ public class OrderServiceImpl implements OrderService{
 	private IOrderDao iOrderDao;	
 	
 	@Override
-	public List<Order> getAllOrders(){
+	public List<Order> getAllOrdersByClientAndDate(Integer customerId, String fechaInicial, String fechaFinal){
 		
-		List<Order> lista = iOrderDao.getAllOrdersNative();
+		List<Order> result = iOrderDao.getAllOrdersByClientAndDate(customerId, fechaInicial, fechaFinal);
 		
-		return lista;
+		return result;
 	}
 
 }
