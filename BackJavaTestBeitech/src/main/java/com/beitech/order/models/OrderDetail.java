@@ -7,39 +7,41 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name="order_detail")
+@Table(name="`order_detail`")
 public class OrderDetail implements Serializable{
 	
 	private static final long serialVersionUID=1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="order_detail_id")	
+	@Column(name="`order_detail_id`")	
 	@NotNull
 	private Integer orderDetailId;
 		
-	@Column(name="order_id")
-	@NotNull
-	private Integer orderId;
+	@ManyToOne
+	@JoinColumn(name = "`order_id`", referencedColumnName = "`order_id`", nullable=false)
+	private Order order;
 	
-	@Column(name="product_id")
-	@NotNull
-	private Integer productId;
+	@ManyToOne
+	@JoinColumn(name = "`product_id`", referencedColumnName = "`product_id`", nullable=false)
+	private Product product;
 	
-	@Column(name="product_description")
+	@Column(name="`product_description`")
 	@NotNull
 	private String productDescripcion;
 	
-	@Column(name="price")
+	@Column(name="`price`")
 	@NotNull
 	private Double price;
 
-	@Column(name="quantity")
+	@Column(name="`quantity`")
 	@NotNull
 	private Integer quantity;
 	
@@ -47,10 +49,10 @@ public class OrderDetail implements Serializable{
 		super();
 	}
 	
-	public OrderDetail(Integer orderId,Integer productId,String productDescripcion,Double price,Integer quantity) {
+	public OrderDetail(Order order,Product product,String productDescripcion,Double price,Integer quantity) {
 		super();
-		this.orderId=orderId;
-		this.productId=productId;
+		this.order=order;
+		this.product=product;
 		this.productDescripcion=productDescripcion;
 		this.price=price;
 		this.quantity=quantity;
@@ -64,20 +66,20 @@ public class OrderDetail implements Serializable{
 		this.orderDetailId = orderDetailId;
 	}
 
-	public Integer getOrderId() {
-		return orderId;
+	public Order getOrder() {
+		return order;
 	}
 
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
-	public Integer getProductId() {
-		return productId;
+	public Product getProductId() {
+		return product;
 	}
 
-	public void setProductId(Integer productId) {
-		this.productId = productId;
+	public void setProductId(Product product) {
+		this.product = product;
 	}
 
 	public String getProductDescripcion() {

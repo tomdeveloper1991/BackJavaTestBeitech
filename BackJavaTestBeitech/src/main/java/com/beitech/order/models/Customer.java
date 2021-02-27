@@ -12,22 +12,22 @@ import javax.persistence.Table;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "`customer`")
 public class Customer implements Serializable{
 	
 	private static final long serialVersionUID=1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "customer_id")
+	@Column(name = "`customer_id`")
 	@NotNull
 	private Integer customerId;
 	
-	@Column(name = "name")
+	@Column(name = "`name`")
 	@NotNull
 	private String name;
 	
-	@Column(name = "email")
+	@Column(name = "`email`")
 	@NotNull
 	private String email;
 		

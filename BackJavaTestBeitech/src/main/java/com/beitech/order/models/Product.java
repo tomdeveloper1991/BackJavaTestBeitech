@@ -12,26 +12,26 @@ import javax.persistence.Table;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name = "product")
+@Table(name = "`product`")
 public class Product implements Serializable{
 
 	private static final long serialVersionUID=1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "product_id")
+	@Column(name = "`product_id`")
 	@NotNull
 	private Integer productId;
 	
-	@Column(name = "name")
+	@Column(name = "`name`")
 	@NotNull
 	private String name;
 	
-	@Column(name = "product_description")
+	@Column(name = "`product_description`")
 	@NotNull
 	private String productDescription;
 	
-	@Column(name = "price")
+	@Column(name = "`price`")
 	@NotNull
 	private Double price;
 	

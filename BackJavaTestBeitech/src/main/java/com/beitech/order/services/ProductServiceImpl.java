@@ -17,6 +17,6 @@ public class ProductServiceImpl implements ProductService{
 	private IProductDao iProductDao;
 	
 	public List<Product> findAll(){
-		return iProductDao.findAll();		
+		return iProductDao.findAll();
 	}
 }

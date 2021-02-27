@@ -1,6 +1,7 @@
 package com.beitech.order.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -17,6 +18,6 @@ public class OrderDetailServiceImpl implements OrderDetailService{
 	private IOrderDetailDao iOrderDetailDao;
 	
 	public List<OrderDetail> findAll(){
-		return iOrderDetailDao.findAll();
+		return iOrderDetailDao.getAllOrdersDetailsByDetail(100);
 	}
 }
