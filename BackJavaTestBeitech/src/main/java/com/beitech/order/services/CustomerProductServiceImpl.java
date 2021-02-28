@@ -22,6 +22,6 @@ public class CustomerProductServiceImpl implements CustomerProductService{
 	}
 	
 	public List<CustomerProduct> findByIdCustomer(Integer idCustomer){
-		return iCustomerProductDao.findByIdCustomer(idCustomer);
+		return iCustomerProductDao.findByCustomerId(idCustomer);
 	}
 }

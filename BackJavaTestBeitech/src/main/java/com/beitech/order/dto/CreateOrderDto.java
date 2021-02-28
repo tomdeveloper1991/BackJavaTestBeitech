@@ -10,7 +10,7 @@ public class CreateOrderDto {
 	private Integer customerId;
 	private String deliveryAddress;	
 	
-	private List<Product> products;
+	private List<CreateOrderDetailDTO> products;
 	
 	public CreateOrderDto() {
 		super();
@@ -40,14 +40,13 @@ public class CreateOrderDto {
 		this.deliveryAddress = deliveryAddress;
 	}
 
-	public List<Product> getProducts() {
+	public List<CreateOrderDetailDTO> getProducts() {
 		return products;
 	}
 
-	public void setProducts(List<Product> products) {
+	public void setProducts(List<CreateOrderDetailDTO> products) {
 		this.products = products;
 	}
 	
-	
-	
+
 }

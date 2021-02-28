@@ -12,7 +12,6 @@ import com.beitech.order.models.CustomerProduct;
 @Repository
 public interface ICustomerProductDao extends JpaRepository<CustomerProduct, Integer>{
 
+	public List<CustomerProduct> findByCustomerId(Integer customerId);
 	
-	@Query(value="SELECT * FROM `customer_product` WHERE `customer_id`= :customerId", nativeQuery = true)
-	public List<CustomerProduct> findByIdCustomer(@Param("customerId") Integer customerId);
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.beitech.order.dao.IOrderDao;
+import com.beitech.order.dto.CreateOrderDetailDTO;
 import com.beitech.order.dto.CreateOrderDto;
 import com.beitech.order.models.Customer;
 import com.beitech.order.models.Order;
@@ -64,43 +66,33 @@ public class OrderApi {
 	}
 	
 	@PostMapping(value="/createOrder")
-	public Object createOrder(@RequestBody Order customerId) {
+	public ResponseEntity<CreateOrderDto>createOrder(@RequestBody CreateOrderDto orderDto) {
 		try {						
-			Log.info("customerId.OrderId"+customerId.getOrderId());
+			Log.info("customerId.OrderId"+orderDto.getCreationDate());
 			CreateOrderDto request = new CreateOrderDto();
-			List<Product> products = new ArrayList<Product>();
+			List<CreateOrderDetailDTO> products = new ArrayList<CreateOrderDetailDTO>();
+						
+			orderService.createOrder(orderDto);
 			
-			Product product = new Product("Producto 1", "Producto de Prueba 1", 10000.0);
-			Product product2 = new Product("Producto 2", "Producto de Prueba 2", 20000.0);	
-			Product product3 = new Product("Producto 3", "Producto de Prueba 3", 30000.0);
+			/*CreateOrderDetailDTO product = new CreateOrderDetailDTO(1, "Sin cubiertos ni servilletas", 3);
+			CreateOrderDetailDTO product2 = new CreateOrderDetailDTO(1, "Sin salsas", 2);	
+			CreateOrderDetailDTO product3 = new CreateOrderDetailDTO(1, "Sin Azucar", 1);
 			
 			products.add(product);
 			products.add(product2);
-			products.add(product3);			
+			products.add(product3);
 			
 			request.setCreationDate("20210602");
 			request.setCustomerId(7);
 			request.setDeliveryAddress("Avenida Siempre viva 123");
 			
-			request.setProducts(products);		
-			
-			return request;
+			request.setProducts(products);*/
+										
+			return ResponseEntity.status(HttpStatus.OK).body(request);
 		} catch (Exception e) {
 			Log.error(e.getMessage());
 			throw new InternalServerError(e.getMessage());
 		}			
-	}
-	
-	@RequestMapping(value="/getTest",method = RequestMethod.GET)
-	public Object getTest(){
-		Object result = new Object();
-			
-		result=customerService.findAll();
-		result=productService.findAll();		
-		result=orderDetailService.findAll();
-		result=customerProductService.findByIdCustomer(1);
-		
-		return result;
 	}
 
 }

@@ -43,11 +43,11 @@ public class CustomerProduct implements Serializable{
 		this.customerId = customerId;
 	}
 
-	public Product getProductId() {
+	public Product getProduct() {
 		return product;
 	}
 
-	public void setProductId(Product product) {
+	public void setProduct(Product product) {
 		this.product = product;
 	}
 
