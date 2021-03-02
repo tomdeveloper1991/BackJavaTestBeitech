@@ -6,8 +6,6 @@ import com.beitech.order.models.CustomerProduct;
 
 public interface CustomerProductService {
 
-	public List<CustomerProduct> findAll();
-	
-	public List<CustomerProduct> findByIdCustomer(Integer idCustomer);
+	public List<CustomerProduct> findAll();	
 		
 }

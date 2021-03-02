@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.beitech.order.dao.IOrderDao;
 import com.beitech.order.dto.CreateOrderDetailDTO;
 import com.beitech.order.dto.CreateOrderDto;
+import com.beitech.order.dto.OrderDto;
 import com.beitech.order.models.Customer;
 import com.beitech.order.models.Order;
 import com.beitech.order.models.Product;
@@ -34,19 +35,7 @@ import com.beitech.order.utils.exception.InternalServerError;
 public class OrderApi {
 		
 	@Autowired
-	private OrderService orderService;
-	
-	@Autowired
-	private CustomerService customerService;
-	
-	@Autowired
-	private ProductService productService;
-	
-	@Autowired
-	private CustomerProductService customerProductService;
-	
-	@Autowired
-	private OrderDetailService orderDetailService;
+	private OrderService orderService;	
 	
 	private static final Logger Log = LoggerFactory.getLogger(OrderServiceImpl.class);
 	
@@ -66,29 +55,13 @@ public class OrderApi {
 	}
 	
 	@PostMapping(value="/createOrder")
-	public ResponseEntity<CreateOrderDto>createOrder(@RequestBody CreateOrderDto orderDto) {
+	public ResponseEntity<OrderDto>createOrder(@RequestBody CreateOrderDto orderDto) {
 		try {						
-			Log.info("customerId.OrderId"+orderDto.getCreationDate());
-			CreateOrderDto request = new CreateOrderDto();
-			List<CreateOrderDetailDTO> products = new ArrayList<CreateOrderDetailDTO>();
-						
-			orderService.createOrder(orderDto);
-			
-			/*CreateOrderDetailDTO product = new CreateOrderDetailDTO(1, "Sin cubiertos ni servilletas", 3);
-			CreateOrderDetailDTO product2 = new CreateOrderDetailDTO(1, "Sin salsas", 2);	
-			CreateOrderDetailDTO product3 = new CreateOrderDetailDTO(1, "Sin Azucar", 1);
-			
-			products.add(product);
-			products.add(product2);
-			products.add(product3);
-			
-			request.setCreationDate("20210602");
-			request.setCustomerId(7);
-			request.setDeliveryAddress("Avenida Siempre viva 123");
-			
-			request.setProducts(products);*/
+			Log.info("customerId.OrderId"+orderDto.getCreationDate());							
+			Order newOrder = orderService.createOrder(orderDto);
+			OrderDto responseOrderDto = new OrderDto(newOrder.getOrderId(), newOrder.getCustomer().getCustomerId(), newOrder.getCreationDate(), newOrder.getDeliveryAddress(), newOrder.getTotal());					
 										
-			return ResponseEntity.status(HttpStatus.OK).body(request);
+			return ResponseEntity.status(HttpStatus.OK).body(responseOrderDto);
 		} catch (Exception e) {
 			Log.error(e.getMessage());
 			throw new InternalServerError(e.getMessage());

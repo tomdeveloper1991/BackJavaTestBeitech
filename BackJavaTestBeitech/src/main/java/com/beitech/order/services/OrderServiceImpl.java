@@ -2,8 +2,10 @@ package com.beitech.order.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +19,10 @@ import com.beitech.order.dao.IOrderDao;
 import com.beitech.order.dao.IProductDao;
 import com.beitech.order.dto.CreateOrderDetailDTO;
 import com.beitech.order.dto.CreateOrderDto;
+import com.beitech.order.models.Customer;
 import com.beitech.order.models.CustomerProduct;
 import com.beitech.order.models.Order;
+import com.beitech.order.utils.Utility;
 import com.beitech.order.utils.exception.BadRequest;
 import com.beitech.order.utils.exception.NotFoundException;
 
@@ -37,7 +41,9 @@ public class OrderServiceImpl implements OrderService{
 	private IProductDao iProductDao;
 	
 	@Autowired
-	private ICustomerProductDao iCustomerProductDao;
+	private ICustomerProductDao iCustomerProductDao;	
+	
+	private Utility utils =  new Utility();
 	
 	private static final Logger Log = LoggerFactory.getLogger(OrderServiceImpl.class);
 	
@@ -72,30 +78,22 @@ public class OrderServiceImpl implements OrderService{
 		return result;
 	}
 	
-	public Order createOrder(CreateOrderDto newOrderDto) {
+	public Order createOrder(CreateOrderDto newOrderDto) {				
 		
-		if(!iCustomerDao.existsById(newOrderDto.getCustomerId())) {
-			Log.error(ERROR_CUSTOMER_MSJ);
-			throw new NotFoundException(ERROR_CUSTOMER_MSJ);
-		}
+		Customer customer = iCustomerDao.findById(newOrderDto.getCustomerId()).orElseThrow(()->new NotFoundException(ERROR_CUSTOMER_MSJ));				
 		
-		Integer ProductsCounter=0;
+		List<CustomerProduct> customerProducts = iCustomerProductDao.findByCustomerProductIdCustomerId(newOrderDto.getCustomerId());
+											
 		
-		List<CustomerProduct> customerProducts = iCustomerProductDao.findByCustomerId(newOrderDto.getCustomerId());
-		
-		
-		
+		Integer ProductsCounter=0;								
+				
 		for (CreateOrderDetailDTO newOrderDetailDto : newOrderDto.getProducts()) {
 			
 			if (!iProductDao.existsById(newOrderDetailDto.getProductId())) {
 				Log.error(ERROR_PRODUCT_MSJ);
 				throw new NotFoundException(ERROR_PRODUCT_MSJ);
-			}else {
-				for (CustomerProduct customerProduct : customerProducts) {
-					if (!(customerProduct.getProduct().getProductId()==newOrderDetailDto.getProductId())) {
-						throw new BadRequest(ERROR_CUSTOMER_PRODUCT_MSJ);
-					}																		
-				}
+			}else {				
+				customerProducts.stream().filter(p->p.getCustomerProductId().getProductId().equals(newOrderDetailDto.getProductId())).findFirst().orElseThrow(()->new NotFoundException(ERROR_CUSTOMER_PRODUCT_MSJ));				
 			}
 			
 			ProductsCounter+=newOrderDetailDto.getQuantity();
@@ -103,18 +101,10 @@ public class OrderServiceImpl implements OrderService{
 			if (ProductsCounter>5) {
 				throw new BadRequest(ERROR_NUM_PRODUCTS_MSJ);
 			}
-			
 		}
 		
-		
-		
-		
-		
-		
-		
-		//Order newOrder = new Order(newOrderDto.getCustomerId(), creationDate, deliveryAddress, total)
-		
-		return null;
+		Order newOrder = new Order(customer, this.utils.convertStringToDate(newOrderDto.getCreationDate()), newOrderDto.getDeliveryAddress(), new Double("0.5"));					
+		return iOrderDao.save(newOrder);
 	}
 
 }

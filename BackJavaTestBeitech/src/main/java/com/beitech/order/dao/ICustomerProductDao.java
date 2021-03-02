@@ -1,6 +1,7 @@
 package com.beitech.order.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ import com.beitech.order.models.CustomerProduct;
 
 @Repository
 public interface ICustomerProductDao extends JpaRepository<CustomerProduct, Integer>{
-
-	public List<CustomerProduct> findByCustomerId(Integer customerId);
+	
+	public List<CustomerProduct> findByCustomerProductIdCustomerId(Integer customerId); 
 	
 }
