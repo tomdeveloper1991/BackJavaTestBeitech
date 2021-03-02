@@ -2,7 +2,6 @@ package com.beitech.order.dto;
 
 import java.util.List;
 
-import com.beitech.order.models.Product;
 
 public class CreateOrderDto {
 	

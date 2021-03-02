@@ -2,10 +2,8 @@ package com.beitech.order.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +14,17 @@ import org.springframework.stereotype.Service;
 import com.beitech.order.dao.ICustomerDao;
 import com.beitech.order.dao.ICustomerProductDao;
 import com.beitech.order.dao.IOrderDao;
+import com.beitech.order.dao.IOrderDetailDao;
 import com.beitech.order.dao.IProductDao;
 import com.beitech.order.dto.CreateOrderDetailDTO;
 import com.beitech.order.dto.CreateOrderDto;
+import com.beitech.order.dto.OrderDetailDto;
+import com.beitech.order.dto.OrderDto;
 import com.beitech.order.models.Customer;
 import com.beitech.order.models.CustomerProduct;
 import com.beitech.order.models.Order;
+import com.beitech.order.models.OrderDetail;
+import com.beitech.order.models.Product;
 import com.beitech.order.utils.Utility;
 import com.beitech.order.utils.exception.BadRequest;
 import com.beitech.order.utils.exception.NotFoundException;
@@ -41,7 +44,10 @@ public class OrderServiceImpl implements OrderService{
 	private IProductDao iProductDao;
 	
 	@Autowired
-	private ICustomerProductDao iCustomerProductDao;	
+	private ICustomerProductDao iCustomerProductDao;
+	
+	@Autowired
+	private IOrderDetailDao iOrderDetailDao;
 	
 	private Utility utils =  new Utility();
 	
@@ -78,14 +84,17 @@ public class OrderServiceImpl implements OrderService{
 		return result;
 	}
 	
-	public Order createOrder(CreateOrderDto newOrderDto) {				
+	public OrderDto createOrder(CreateOrderDto newOrderDto) {				
 		
 		Customer customer = iCustomerDao.findById(newOrderDto.getCustomerId()).orElseThrow(()->new NotFoundException(ERROR_CUSTOMER_MSJ));				
 		
 		List<CustomerProduct> customerProducts = iCustomerProductDao.findByCustomerProductIdCustomerId(newOrderDto.getCustomerId());
-											
+			
+		Product productAux = null;			
 		
-		Integer ProductsCounter=0;								
+		Integer ProductsCounter=0;
+		
+		Double total = 0.0;
 				
 		for (CreateOrderDetailDTO newOrderDetailDto : newOrderDto.getProducts()) {
 			
@@ -98,13 +107,38 @@ public class OrderServiceImpl implements OrderService{
 			
 			ProductsCounter+=newOrderDetailDto.getQuantity();
 			
+			productAux = iProductDao.findById(newOrderDetailDto.getProductId()).orElseThrow(()->new NotFoundException(ERROR_PRODUCT_MSJ));
+			
+			total+=productAux.getPrice()*newOrderDetailDto.getQuantity();
+								
 			if (ProductsCounter>5) {
 				throw new BadRequest(ERROR_NUM_PRODUCTS_MSJ);
-			}
+			}					
 		}
 		
-		Order newOrder = new Order(customer, this.utils.convertStringToDate(newOrderDto.getCreationDate()), newOrderDto.getDeliveryAddress(), new Double("0.5"));					
-		return iOrderDao.save(newOrder);
+		Order newOrder = new Order(customer, this.utils.convertStringToDate(newOrderDto.getCreationDate()), newOrderDto.getDeliveryAddress(), new Double(total));
+		
+		iOrderDao.save(newOrder);
+		
+		List<OrderDetailDto> orderDetailDtoList = new ArrayList<OrderDetailDto>();
+		
+		total=0.0;
+		
+		for (CreateOrderDetailDTO newOrderDetailDto : newOrderDto.getProducts()) {
+			productAux = iProductDao.findById(newOrderDetailDto.getProductId()).orElseThrow(()->new NotFoundException(ERROR_PRODUCT_MSJ));
+			
+			total=productAux.getPrice()*newOrderDetailDto.getQuantity();
+			
+			OrderDetail orderDetail = new OrderDetail(newOrder, productAux, newOrderDetailDto.getProductDescription(), total, newOrderDetailDto.getQuantity());
+			
+			iOrderDetailDao.save(orderDetail);
+			
+			orderDetailDtoList.add(new OrderDetailDto(orderDetail.getOrderDetailId(), orderDetail.getOrder().getOrderId(), productAux, orderDetail.getProductDescripcion(), orderDetail.getPrice(), orderDetail.getQuantity()));
+		}
+		
+		OrderDto newOrderDtoResponse = new OrderDto(newOrder.getOrderId(), newOrder.getCustomer().getCustomerId(), newOrder.getCreationDate(), newOrder.getDeliveryAddress(), newOrder.getTotal(), orderDetailDtoList);
+				
+		return newOrderDtoResponse;
 	}
 
 }

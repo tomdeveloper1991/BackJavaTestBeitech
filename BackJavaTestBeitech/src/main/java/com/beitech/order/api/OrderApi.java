@@ -56,16 +56,13 @@ public class OrderApi {
 	
 	@PostMapping(value="/createOrder")
 	public ResponseEntity<OrderDto>createOrder(@RequestBody CreateOrderDto orderDto) {
-		try {						
-			Log.info("customerId.OrderId"+orderDto.getCreationDate());							
-			Order newOrder = orderService.createOrder(orderDto);
-			OrderDto responseOrderDto = new OrderDto(newOrder.getOrderId(), newOrder.getCustomer().getCustomerId(), newOrder.getCreationDate(), newOrder.getDeliveryAddress(), newOrder.getTotal());					
-										
+		try {													
+			OrderDto responseOrderDto = orderService.createOrder(orderDto);															
 			return ResponseEntity.status(HttpStatus.OK).body(responseOrderDto);
 		} catch (Exception e) {
 			Log.error(e.getMessage());
 			throw new InternalServerError(e.getMessage());
-		}			
+		}
 	}
 
 }
