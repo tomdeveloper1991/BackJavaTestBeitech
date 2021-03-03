@@ -1,11 +1,16 @@
 # BackJavaTestBeitech
 
-Proyecto realizado con spring boot, contiene servicios rest solicitados en los siguientes end points
+Proyecto desarrollado con spring boot, contiene servicios web rest que realizan la creación de ordenes y listan las ordenes creadas entre un rango de fechas y para un cliente en especifico.
+Contiene las siguientes caracteristicas:
+- Pruebas de Integracion.
+- Documentación automatizada con Swagger.
+
+### End Points para consumir los servicios
 
 - http://localhost:8888/beitech/backend/order/createOrder
 - http://localhost:8888/beitech/backend/order/getOrdersByCustomerAndDate/99999/20200101/20200431
 
-### La documentación de los servicios rest realizada con Swagger
+### Enlace para ver la documentación de los servicios rest (Swagger)
 
 - http://localhost:8888/beitech/backend/order/swagger-ui.html#/order-api
 
